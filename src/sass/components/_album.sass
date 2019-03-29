@@ -1,0 +1,127 @@
+.album
+    background-color: $albumBgColor
+    padding: 10vh 5vw
+    height: 95vh
+
+    &Main
+        height: 100%
+        margin: 0 5vw
+
+    &Title
+        font-size: 20px
+        text-transform: uppercase
+        background-color: green
+        height: 10%
+        display: flex
+        flex-direction: row
+        align-items: center
+        justify-content: center
+    &Body
+        background-color: yellow
+        height: 90%
+
+    &ItemsWrapper
+        background-color: blue
+        height: 100%
+        font-size: 0
+        padding: 5vw
+        overflow-y: scroll
+
+    &Item
+        font-size: 16px
+        display: inline-block
+        vertical-align: top
+        width: 22vw
+        height: 22vw
+        border: 5px solid transparent
+        
+        &Content
+            background-color: lightgray
+            position: relative
+            height: 100%
+            cursor: pointer
+            overflow: hidden
+            &:hover
+                .albumItemTitle
+                    background-color: rgba(0,0,0,0)
+                    top: -100%
+
+        &Title
+            position: absolute
+            top: 0
+            left: 0
+            width: 100%
+            height: 100%
+            display: flex
+            flex-direction: row
+            align-items: center
+            justify-content: center
+            text-align: center
+            font-size: 16px
+            padding: 10px
+            color: white
+            background-color: rgba(0,0,0,0.6)
+            transition: all ease 0.7s
+        
+        &Image
+            width: 100%
+            height: 100%
+            overflow: hidden
+
+            img
+                width: 100%
+                height: 100%
+        
+
+    .btnSidePrev, .btnSideNext
+        background-color: rgba(0,0,0,0.3)
+        height: 100%
+        width: 5vw
+        margin: 0
+        padding: 0
+        box-shadow: none
+        position: relative
+        &:hover
+            transform: translateY(0)
+            box-shadow: none
+        span
+            display: block
+            width: 100%
+            height: 100%
+            background-color: red
+    .btnSidePrev
+        float: left
+
+        &:after, &:before
+            content: ""
+            width: 20px
+            height: 2px
+            position: absolute
+            top: 50%
+            left: 50%
+            background-color: gray
+            transform-origin: left center
+            
+        &:after
+            transform: translate(-45%) rotateZ(-55deg)
+        &:before
+            transform: translate(-45%) rotateZ(55deg)
+
+    .btnSideNext
+        float: right
+        &:after, &:before
+            content: ""
+            width: 20px
+            height: 2px
+            position: absolute
+            top: 50%
+            left: 50%
+            background-color: gray
+            transform-origin: right center
+            
+        &:after
+            transform: translate(-65%) rotateZ(-55deg)
+        &:before
+            transform: translate(-65%) rotateZ(55deg)
+
+

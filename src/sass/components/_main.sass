@@ -1,0 +1,33 @@
+
+*
+    box-sizing: border-box
+    margin: 0
+    // padding: 0
+
+body
+    color: $main-text-color
+
+button, button:focus
+    outline: none
+
+ul
+    list-style-type: none
+
+.btn
+    display: inline-block
+    background-color: $panel-button-bg-color
+    color: black
+    padding: 10px 25px
+    border-radius: 3px
+    cursor: pointer
+    text-transform: uppercase
+    transition: all ease 0.3s
+    backface-visibility: hidden
+    box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.75)
+    margin-bottom: 20px
+    outline: none
+    border: none
+    &:hover
+        transform: translateY(-2px)
+        box-shadow: 2px 4px 5px 0px rgba(0,0,0,0.75)
+        
