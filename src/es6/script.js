@@ -2,10 +2,29 @@
 $(document).ready(function(){
     console.log('Ready!');
 
+    // initialization
     var currentAlbumState = 1;
     var albumsAmount = 0;
     
     fetchImages();
+    fetchAlbumName();
+
+
+    // handling buttons
+    $(".btnSidePrev").click(function(){
+        deleteAlbumItems();
+        currentAlbumState -= 1;
+        fetchImages();
+        fetchAlbumName();
+    });
+
+    $(".btnSideNext").click(function(){
+        deleteAlbumItems();
+        currentAlbumState += 1;
+        fetchImages();
+        fetchAlbumName();
+    });
+
 
     function fetchImages(){
         fetch('https://jsonplaceholder.typicode.com/photos')
@@ -27,51 +46,55 @@ $(document).ready(function(){
                 });
     }
 
+    function fetchAlbumName(){
+        fetch('http://jsonplaceholder.typicode.com/albums')
+        .then(response => response.json())
+        .then(function(json){
+            for(var i=0; i<json.length; i++) {
+                if(json[i]["id"] === currentAlbumState) {
+                    $(".albumTitleNumber").text(json[i]["title"]);
+                }
+            }
+        });
+    }
+
     function fetchBigImage(imageNumber){
         fetch('https://jsonplaceholder.typicode.com/photos')
             .then(response => response.json())
             .then(function(json){
-                createBigPicture(json[(currentAlbumState-1)*10+imageNumber]["url"]);
-                console.log((currentAlbumState-1)*50+imageNumber);
+                var bigImageNumber = (currentAlbumState-1)*50+imageNumber;
+                createBigPicture(json[bigImageNumber]["url"]);
+                console.log("This is image number: " + bigImageNumber);
                 });
     }
+
+
     function createBigPicture(imageBig){
         $(".popup__content").append('<img src="' + imageBig +'" alt="Picture">');
+        openPopup("popupPic");
     }
-
-    $(".btnSidePrev").click(function(){
-        deleteAlbumItems();
-        currentAlbumState -= 1;
-        fetchImages();
-    });
-
-    $(".btnSideNext").click(function(){
-        deleteAlbumItems();
-        currentAlbumState += 1;
-        fetchImages();
-    });
 
     function createAlbumItem(albumTitle, picTitle, thumbnailUrl){
         $(".albumItemsWrapper").append('<div class="albumItem"><div class="albumItemContent"><div class="albumItemTitle">'+ picTitle +'</div><div class="albumItemImage"><img src="' + thumbnailUrl + '" alt=""></div></div></div>');
-        $(".albumTitleNumber").text(albumTitle)
     }
+
     function deleteAlbumItems(){
         $(".albumItemsWrapper").empty();
     }
-    function deleteBigImages(){
+    function deleteBigImage(){
         $(".popup__content").empty();
     }
 
+
+    // opening and closing popups
     $(document).on("click",".albumItem", function(){
         var imageNumber = $(this).index();
-        console.log(imageNumber);
-        openPopup("popupPic");
         fetchBigImage(imageNumber);
     });
 
     $(".popup__close-button, .popup").click(function(){
         closePopup("popupPic");
-        deleteBigImages();
+        setTimeout(deleteBigImage, 600);
     });
 
     function closePopup(className){
@@ -85,7 +108,8 @@ $(document).ready(function(){
     function openPopup(popupToOpen){
         closeAllPopups();
         $("." + popupToOpen).addClass("active");
-        fetchBigImage();
     }
+
+
 });
 

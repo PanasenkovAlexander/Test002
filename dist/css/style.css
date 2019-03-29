@@ -54,7 +54,8 @@ ul {
   .popup__main {
     width: 90vw;
     max-width: 500px;
-    min-height: 300px;
+    height: 60vh;
+    min-height: 500px;
     background-color: #fff;
     position: absolute;
     top: 50%;
