@@ -1,5 +1,5 @@
 
-export function getThisButtonLink(buttonElement) {
+export function getButtonLink(buttonElement) {
     var buttonClassNames = buttonElement.attr("class").split(" ");
     var buttonLinkToPopup;
     for (var i = buttonClassNames.length-1; i >= 0; i--) {
@@ -12,7 +12,7 @@ export function getThisButtonLink(buttonElement) {
     return buttonLinkToPopup.charAt(0).toLowerCase() + buttonLinkToPopup.slice(1); // returning lowercased name of popup to open
 }
 
-export function getThisPopupClearClass(popupElement){
+export function getPopupCleanClass(popupElement){
     var classNames = popupElement.closest(".popup.active").attr("class").split(" ");
     for (var i = classNames.length; i >= 0; i--) {
         if (classNames[i] === "popup" || classNames[i] === "active") {
