@@ -12,7 +12,7 @@ button, button:focus {
 ul {
   list-style-type: none; }
 
-.btn {
+.btnScrollAlbum {
   display: inline-block;
   background-color: #fbd431;
   color: black;
@@ -29,7 +29,7 @@ ul {
   margin-bottom: 20px;
   outline: none;
   border: none; }
-  .btn:hover {
+  .btnScrollAlbum:hover {
     -webkit-transform: translateY(-2px);
     transform: translateY(-2px);
     -webkit-box-shadow: 2px 4px 5px 0px rgba(0, 0, 0, 0.75);
