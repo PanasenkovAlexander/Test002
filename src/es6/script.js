@@ -5,19 +5,20 @@ import { openPopup, closePopup, getPopupCleanClass } from './modules/popup';
 window.onload = function(){
 
     console.log('Ready!');
+
+    
+
     const REST_API_URL = "https://jsonplaceholder.typicode.com/";
 
     // initialization
     initialiseAlbum();
 
     // handling buttons
-    document.getElementsByClassName("btnSidePrev")[0].onclick = function(){ // previous button click
-        deleteAlbumItems();
+    document.getElementsByClassName("btnSidePrev")[0].onclick = function(){ // previous button click 
         nextAlbum(-1)
     }
 
     document.getElementsByClassName("btnSideNext")[0].onclick = function(){ // next button click
-        deleteAlbumItems();
         nextAlbum(1);
     }
 
@@ -49,7 +50,7 @@ window.onload = function(){
             .then(response => response.json())
             .then(function(json){
                 json.forEach(function(item){
-                    createAlbumItem(item["title"], item["thumbnailUrl"]);
+                    createAlbumItem(item["title"], item["thumbnailUrl"], item["url"]);
                 });
             });
     }
@@ -66,30 +67,12 @@ window.onload = function(){
             });
     }
 
-    function fetchBigImageURL(albumTitle, imageNumber){ // getting URL of big image by clicking on album item
-        var albumId = 0;
-        fetch(REST_API_URL + 'albums')
-            .then(response => response.json())
-            .then(function(json){
-                json.forEach(function(item){
-                    if(item["title"] === albumTitle) {
-                        albumId = item["id"]
-                    }
-                });
-            console.log("album id is: " + albumId);
-            fetch(REST_API_URL + 'photos?albumId=' + albumId)
-                .then(response => response.json())
-                .then(function(json){
-                    createBigPicturePopup(json[imageNumber]["url"]);
-                })
-        })
-    }
-
     function nextAlbum(direction){ // showing next or previous album (direction 1: forward; -1: backward)
         var albumTitle = document.getElementsByClassName("albumTitleNumber")[0].innerHTML;
         var scrollButtons = document.getElementsByClassName("btnScrollAlbum");
         var albumId = 0;
         var albumsAmount = 0;
+        deleteAlbumItems();
         Array.prototype.forEach.call(scrollButtons, function(button) {
             button.disabled = true;
         });
@@ -124,7 +107,7 @@ window.onload = function(){
         openPopup("popupPic");
     }
 
-    function createAlbumItem(picTitle, thumbnailURL){ // creating album items with onclick events 
+    function createAlbumItem(picTitle, thumbnailURL, imageURL){ // creating album items with onclick events 
 
         var albumItemTitle = document.createElement("div");
         albumItemTitle.className = "albumItemTitle";
@@ -135,6 +118,7 @@ window.onload = function(){
         
         var albumImg = document.createElement("img");
         albumImg.src = thumbnailURL;
+        albumImg.setAttribute("data-url", imageURL);
         
         var albumItemContent = document.createElement("div");
         albumItemContent.className = "albumItemContent";
@@ -142,9 +126,8 @@ window.onload = function(){
         var albumItem = document.createElement("div");
         albumItem.className = "albumItem";
         albumItem.onclick = function(e){
-            var imageNumber = Array.from(document.getElementsByClassName("albumItem")).indexOf(e.target.closest(".albumItem"));
-            var albumTitle = document.getElementsByClassName("albumTitleNumber")[0].innerHTML;
-            fetchBigImageURL(albumTitle, imageNumber);
+            var bigURL = e.target.closest(".albumItem").querySelector('.albumItemImage img').getAttribute("data-url");
+            createBigPicturePopup(bigURL);
         }
 
         albumItem.appendChild(albumItemContent);
