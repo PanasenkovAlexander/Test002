@@ -8,6 +8,7 @@ window.onload = function () {
     // album module declaration
     var Album = function Album() {
         var REST_API_URL = "https://jsonplaceholder.typicode.com/";
+        var currentAlbumNumber = 1;
 
         function initialiseAlbum() {
             var initialAlbumState = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
@@ -99,21 +100,17 @@ window.onload = function () {
         function nextAlbum(direction) {
             // showing next or previous album (direction 1: forward; -1: backward)
             var scrollButtons = document.getElementsByClassName("btnScrollAlbum");
-            var albumId = 0;
-            var albumsAmount = 0;
+            var albumId;
+            var albumsAmount;
             deleteAlbumItems();
             Array.prototype.forEach.call(scrollButtons, function (button) {
                 button.disabled = true;
             });
-            albumId = +document.getElementsByClassName("albumTitleNumber")[0].getAttribute("data-albumnumber");
+            albumId = parseInt(document.getElementsByClassName("albumTitleNumber")[0].getAttribute("data-albumnumber"));
             fetch(REST_API_URL + 'albums').then(function (response) {
                 return response.json();
             }).then(function (json) {
-                json.forEach(function (item) {
-                    if (item["id"] > albumsAmount) {
-                        albumsAmount = item["id"];
-                    }
-                });
+                albumsAmount = json.length;
                 console.log("Total albums amount: " + albumsAmount);
                 albumId += direction;
                 if (albumId < 1) {
