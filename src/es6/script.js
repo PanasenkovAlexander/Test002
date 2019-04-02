@@ -6,8 +6,6 @@ window.onload = function(){
 
     console.log('Ready!');
 
-    
-
     (function(){
 
         const REST_API_URL = "https://jsonplaceholder.typicode.com/";
@@ -16,36 +14,35 @@ window.onload = function(){
         initialiseAlbum();
 
         // handling buttons
-        document.getElementsByClassName("btnSidePrev")[0].onclick = function(){ // previous button click 
+        document.getElementsByClassName("btnSidePrev")[0].addEventListener("click", function(){ // previous button click 
             nextAlbum(-1);
-        }
+        });
 
-        document.getElementsByClassName("btnSideNext")[0].onclick = function(){ // next button click
+        document.getElementsByClassName("btnSideNext")[0].addEventListener("click", function(){ // next button click
             nextAlbum(1);
-        }
+        }); 
 
-        document.getElementsByClassName("popup__close-button")[0].onclick = function(){ // closing popup with close button
+        document.getElementsByClassName("popup__close-button")[0].addEventListener("click", function(){ // closing popup with close button
             var cleanClass = getPopupCleanClass(this); 
             closePopup(cleanClass);
             setTimeout(deleteBigImage, 500);
-        }
+        });  
 
-        document.getElementsByClassName("popup")[0].onclick = function(){ // closing popup with click outside
+        document.getElementsByClassName("popup")[0].addEventListener("click", function(){ // closing popup with click outside
             var cleanClass = getPopupCleanClass(this);
             closePopup(cleanClass);
             setTimeout(deleteBigImage, 500);
-        }
+        });
 
-        document.getElementsByClassName("popup__main")[0].onclick = function(e){ // preventing closing on clicking main form content
+        document.getElementsByClassName("popup__main")[0].addEventListener("click", function(e){ // preventing closing on clicking main form content
             e.stopPropagation();
-        }
+        });
 
         // interface realisation
         function initialiseAlbum(){ // set initial album state
             getImages(1);
             getAlbumName(1);
         }
-
 
         function getImages(albumNumber){ // getting album images by album number
             fetch(REST_API_URL + 'photos?albumId=' + albumNumber)
@@ -62,6 +59,7 @@ window.onload = function(){
                 .then(response => response.json())
                 .then(function(json){
                     document.getElementsByClassName("albumTitleNumber")[0].textContent = json[0]["title"];
+                    document.getElementsByClassName("albumTitleNumber")[0].setAttribute("data-albumnumber", json[0]["id"]);
                     var scrollButtons = document.getElementsByClassName("btnScrollAlbum");
                     Array.prototype.forEach.call(scrollButtons, function(button) {
                         button.disabled = false;
@@ -70,7 +68,6 @@ window.onload = function(){
         }
 
         function nextAlbum(direction){ // showing next or previous album (direction 1: forward; -1: backward)
-            var albumTitle = document.getElementsByClassName("albumTitleNumber")[0].innerHTML;
             var scrollButtons = document.getElementsByClassName("btnScrollAlbum");
             var albumId = 0;
             var albumsAmount = 0;
@@ -78,15 +75,13 @@ window.onload = function(){
             Array.prototype.forEach.call(scrollButtons, function(button) {
                 button.disabled = true;
             });
+            albumId = +document.getElementsByClassName("albumTitleNumber")[0].getAttribute("data-albumnumber");
             fetch(REST_API_URL + 'albums')
                 .then(response => response.json())
                 .then(function(json){
                     json.forEach(function(item){
                         if(item["id"]>albumsAmount){
                             albumsAmount = item["id"];
-                        }
-                        if(item["title"] === albumTitle) {
-                            albumId = item["id"];
                         }
                     });
                     console.log("Total albums amount: " + albumsAmount);
@@ -127,10 +122,10 @@ window.onload = function(){
 
             var albumItem = document.createElement("div");
             albumItem.className = "albumItem";
-            albumItem.onclick = function(e){
+            albumItem.addEventListener("click", function(e){
                 var bigURL = e.target.closest(".albumItem").querySelector('.albumItemImage img').getAttribute("data-url");
                 createBigPicturePopup(bigURL);
-            }
+            });
 
             albumItem.appendChild(albumItemContent);
             albumItemContent.appendChild(albumItemTitle);
