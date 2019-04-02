@@ -1,25 +1,7 @@
 
-import { openPopup, closePopup, getPopupCleanClass } from './modules/popup';
-
-
 window.onload = function(){
 
     console.log('Ready!');
-
-    // handling buttons for popup
-    document.getElementsByClassName("popup__close-button")[0].addEventListener("click", function(){ // closing popup with close button
-        var cleanClass = getPopupCleanClass(this); 
-        closePopup(cleanClass);
-    });  
-
-    document.getElementsByClassName("popup")[0].addEventListener("click", function(){ // closing popup with click outside
-        var cleanClass = getPopupCleanClass(this);
-        closePopup(cleanClass);
-    });
-
-    document.getElementsByClassName("popup__main")[0].addEventListener("click", function(e){ // preventing closing on clicking main form content
-        e.stopPropagation();
-    });
 
     // album module declaration
     var Album = function(){
@@ -38,6 +20,48 @@ window.onload = function(){
         document.getElementsByClassName("btnSideNext")[0].addEventListener("click", function(){ // next button click
             nextAlbum(1);
         });
+
+        // handling buttons for popup
+        document.getElementsByClassName("popup__close-button")[0].addEventListener("click", function(){ // closing popup with close button
+            var cleanClass = getPopupCleanClass(this); 
+            closePopup(cleanClass);
+        });  
+    
+        document.getElementsByClassName("popup")[0].addEventListener("click", function(){ // closing popup with click outside
+            var cleanClass = getPopupCleanClass(this);
+            closePopup(cleanClass);
+        });
+    
+        document.getElementsByClassName("popup__main")[0].addEventListener("click", function(e){ // preventing closing on clicking main form content
+            e.stopPropagation();
+        });
+
+        function openPopup(popupToOpen){
+            closeAllPopups();
+            document.getElementsByClassName(popupToOpen)[0].classList.add("active");
+        }
+
+        function closePopup(className){
+            document.getElementsByClassName(className)[0].classList.remove("active");
+            setTimeout(function(){
+                document.getElementsByClassName("popup__content")[0].innerHTML = "";
+            }, 500);
+        }
+
+        function closeAllPopups(){
+            document.getElementsByClassName("popup")[0].classList.remove("active");
+        }
+        
+        function getPopupCleanClass(popupElement){
+            var classNames = popupElement.closest(".popup.active").getAttribute("class").split(" ");
+            for (var i = classNames.length; i >= 0; i--) {
+                if (classNames[i] === "popup" || classNames[i] === "active") {
+                    classNames.splice(i, 1);
+                }
+            }
+            var classOfPopup = classNames.join(".");
+            return classOfPopup; // returning popup class to close
+        }
 
         function getImages(albumNumber){ // getting album images by album number
             fetch(REST_API_URL + 'photos?albumId=' + albumNumber)

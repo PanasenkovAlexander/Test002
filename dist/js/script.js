@@ -1,66 +1,9 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 "use strict";
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.getPopupCleanClass = getPopupCleanClass;
-exports.closePopup = closePopup;
-exports.closeAllPopups = closeAllPopups;
-exports.openPopup = openPopup;
-function getPopupCleanClass(popupElement) {
-    var classNames = popupElement.closest(".popup.active").getAttribute("class").split(" ");
-    for (var i = classNames.length; i >= 0; i--) {
-        if (classNames[i] === "popup" || classNames[i] === "active") {
-            classNames.splice(i, 1);
-        }
-    }
-    var classOfPopup = classNames.join(".");
-    return classOfPopup; // returning popup class to close
-}
-
-function closePopup(className) {
-    document.getElementsByClassName(className)[0].classList.remove("active");
-    setTimeout(function () {
-        document.getElementsByClassName("popup__content")[0].innerHTML = "";
-    }, 500);
-}
-
-function closeAllPopups() {
-    document.getElementsByClassName("popup")[0].classList.remove("active");
-}
-
-function openPopup(popupToOpen) {
-    closeAllPopups();
-    document.getElementsByClassName(popupToOpen)[0].classList.add("active");
-}
-
-},{}],2:[function(require,module,exports){
-'use strict';
-
-var _popup = require('./modules/popup');
-
 window.onload = function () {
 
     console.log('Ready!');
-
-    // handling buttons for popup
-    document.getElementsByClassName("popup__close-button")[0].addEventListener("click", function () {
-        // closing popup with close button
-        var cleanClass = (0, _popup.getPopupCleanClass)(this);
-        (0, _popup.closePopup)(cleanClass);
-    });
-
-    document.getElementsByClassName("popup")[0].addEventListener("click", function () {
-        // closing popup with click outside
-        var cleanClass = (0, _popup.getPopupCleanClass)(this);
-        (0, _popup.closePopup)(cleanClass);
-    });
-
-    document.getElementsByClassName("popup__main")[0].addEventListener("click", function (e) {
-        // preventing closing on clicking main form content
-        e.stopPropagation();
-    });
 
     // album module declaration
     var Album = function Album() {
@@ -82,6 +25,51 @@ window.onload = function () {
             // next button click
             nextAlbum(1);
         });
+
+        // handling buttons for popup
+        document.getElementsByClassName("popup__close-button")[0].addEventListener("click", function () {
+            // closing popup with close button
+            var cleanClass = getPopupCleanClass(this);
+            closePopup(cleanClass);
+        });
+
+        document.getElementsByClassName("popup")[0].addEventListener("click", function () {
+            // closing popup with click outside
+            var cleanClass = getPopupCleanClass(this);
+            closePopup(cleanClass);
+        });
+
+        document.getElementsByClassName("popup__main")[0].addEventListener("click", function (e) {
+            // preventing closing on clicking main form content
+            e.stopPropagation();
+        });
+
+        function openPopup(popupToOpen) {
+            closeAllPopups();
+            document.getElementsByClassName(popupToOpen)[0].classList.add("active");
+        }
+
+        function closePopup(className) {
+            document.getElementsByClassName(className)[0].classList.remove("active");
+            setTimeout(function () {
+                document.getElementsByClassName("popup__content")[0].innerHTML = "";
+            }, 500);
+        }
+
+        function closeAllPopups() {
+            document.getElementsByClassName("popup")[0].classList.remove("active");
+        }
+
+        function getPopupCleanClass(popupElement) {
+            var classNames = popupElement.closest(".popup.active").getAttribute("class").split(" ");
+            for (var i = classNames.length; i >= 0; i--) {
+                if (classNames[i] === "popup" || classNames[i] === "active") {
+                    classNames.splice(i, 1);
+                }
+            }
+            var classOfPopup = classNames.join(".");
+            return classOfPopup; // returning popup class to close
+        }
 
         function getImages(albumNumber) {
             // getting album images by album number
@@ -144,7 +132,7 @@ window.onload = function () {
             var bigImage = document.createElement("img");
             bigImage.src = bigImageURL;
             document.getElementsByClassName("popup__content")[0].appendChild(bigImage);
-            (0, _popup.openPopup)("popupPic");
+            openPopup("popupPic");
         }
 
         function createAlbumItem(picTitle, thumbnailURL, imageURL) {
@@ -195,6 +183,6 @@ window.onload = function () {
     album.initAlbum();
 };
 
-},{"./modules/popup":1}]},{},[2]);
+},{}]},{},[1]);
 
 //# sourceMappingURL=script.js.map
