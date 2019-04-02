@@ -98,11 +98,11 @@ window.onload = function () {
         // interface realisation
         function initialiseAlbum() {
             // set initial album state
-            fetchImages(1);
-            fetchAlbumName(1);
+            getImages(1);
+            getAlbumName(1);
         }
 
-        function fetchImages(albumNumber) {
+        function getImages(albumNumber) {
             // getting album images by album number
             fetch(REST_API_URL + 'photos?albumId=' + albumNumber).then(function (response) {
                 return response.json();
@@ -113,7 +113,7 @@ window.onload = function () {
             });
         }
 
-        function fetchAlbumName(albumNumber) {
+        function getAlbumName(albumNumber) {
             // getting album name by album number
             fetch(REST_API_URL + 'albums?id=' + albumNumber).then(function (response) {
                 return response.json();
@@ -154,8 +154,8 @@ window.onload = function () {
                 } else if (albumId > albumsAmount) {
                     albumId = 1;
                 }
-                fetchImages(albumId);
-                fetchAlbumName(albumId);
+                getImages(albumId);
+                getAlbumName(albumId);
                 console.log("Current album id: " + albumId);
             });
         }
