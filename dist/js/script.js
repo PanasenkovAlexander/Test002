@@ -8,7 +8,6 @@ window.onload = function () {
     // album module declaration
     var Album = function Album() {
         var REST_API_URL = "https://jsonplaceholder.typicode.com/";
-        var currentAlbumNumber = 1;
 
         function initialiseAlbum() {
             var initialAlbumState = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
