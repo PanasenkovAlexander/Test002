@@ -6,7 +6,6 @@ window.onload = function(){
     // album module declaration
     var Album = function(){
         const REST_API_URL = "https://jsonplaceholder.typicode.com/";
-        var currentAlbumNumber = 1;
 
         function initialiseAlbum(initialAlbumState = 1){ // set initial album state
             getImages(initialAlbumState);
