@@ -6,43 +6,38 @@ window.onload = function(){
 
     console.log('Ready!');
 
-    (function(){
+    // handling buttons for popup
+    document.getElementsByClassName("popup__close-button")[0].addEventListener("click", function(){ // closing popup with close button
+        var cleanClass = getPopupCleanClass(this); 
+        closePopup(cleanClass);
+    });  
 
+    document.getElementsByClassName("popup")[0].addEventListener("click", function(){ // closing popup with click outside
+        var cleanClass = getPopupCleanClass(this);
+        closePopup(cleanClass);
+    });
+
+    document.getElementsByClassName("popup__main")[0].addEventListener("click", function(e){ // preventing closing on clicking main form content
+        e.stopPropagation();
+    });
+
+    // album module declaration
+    var Album = function(){
         const REST_API_URL = "https://jsonplaceholder.typicode.com/";
+        const INITIAL_ALBUM_STATE = 1;
 
-        // initialization
-        initialiseAlbum();
+        function initialiseAlbum(){ // set initial album state
+            getImages(INITIAL_ALBUM_STATE);
+            getAlbumName(INITIAL_ALBUM_STATE);
+        }
 
-        // handling buttons
         document.getElementsByClassName("btnSidePrev")[0].addEventListener("click", function(){ // previous button click 
             nextAlbum(-1);
         });
 
         document.getElementsByClassName("btnSideNext")[0].addEventListener("click", function(){ // next button click
             nextAlbum(1);
-        }); 
-
-        document.getElementsByClassName("popup__close-button")[0].addEventListener("click", function(){ // closing popup with close button
-            var cleanClass = getPopupCleanClass(this); 
-            closePopup(cleanClass);
-            setTimeout(deleteBigImage, 500);
-        });  
-
-        document.getElementsByClassName("popup")[0].addEventListener("click", function(){ // closing popup with click outside
-            var cleanClass = getPopupCleanClass(this);
-            closePopup(cleanClass);
-            setTimeout(deleteBigImage, 500);
         });
-
-        document.getElementsByClassName("popup__main")[0].addEventListener("click", function(e){ // preventing closing on clicking main form content
-            e.stopPropagation();
-        });
-
-        // interface realisation
-        function initialiseAlbum(){ // set initial album state
-            getImages(1);
-            getAlbumName(1);
-        }
 
         function getImages(albumNumber){ // getting album images by album number
             fetch(REST_API_URL + 'photos?albumId=' + albumNumber)
@@ -138,12 +133,17 @@ window.onload = function(){
         function deleteAlbumItems(){ // clear album items wrapper
             document.getElementsByClassName("albumItemsWrapper")[0].innerHTML = "";
         }
-        function deleteBigImage(){ // clear big image popup
-            document.getElementsByClassName("popup__content")[0].innerHTML = "";
+
+        // API
+        return {
+            initAlbum: initialiseAlbum
         }
 
-    })();
-    
+    }
 
+    // album module initialization
+    var album = new Album();
+    album.initAlbum();
+    
 }
 

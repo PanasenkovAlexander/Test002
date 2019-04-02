@@ -8,20 +8,6 @@ exports.getPopupCleanClass = getPopupCleanClass;
 exports.closePopup = closePopup;
 exports.closeAllPopups = closeAllPopups;
 exports.openPopup = openPopup;
-
-// function getButtonLink(buttonElement) {
-//     var buttonClassNames = buttonElement.attr("class").split(" ");
-//     var buttonLinkToPopup;
-//     for (var i = buttonClassNames.length-1; i >= 0; i--) {
-//         if(buttonClassNames[i].lastIndexOf('openPopup') !== 0){
-//             buttonClassNames.splice(i, 1);
-//         } else {
-//             buttonLinkToPopup = buttonClassNames[i].substring(4, buttonClassNames[i].length);
-//         }
-//     }
-//     return buttonLinkToPopup.charAt(0).toLowerCase() + buttonLinkToPopup.slice(1); // returning lowercased name of popup to open
-// }
-
 function getPopupCleanClass(popupElement) {
     var classNames = popupElement.closest(".popup.active").getAttribute("class").split(" ");
     for (var i = classNames.length; i >= 0; i--) {
@@ -35,18 +21,18 @@ function getPopupCleanClass(popupElement) {
 
 function closePopup(className) {
     document.getElementsByClassName(className)[0].classList.remove("active");
-    // console.log("Closed popup with class: '" + className + "'");
+    setTimeout(function () {
+        document.getElementsByClassName("popup__content")[0].innerHTML = "";
+    }, 500);
 }
 
 function closeAllPopups() {
     document.getElementsByClassName("popup")[0].classList.remove("active");
-    // console.log("closed all popups");
 }
 
 function openPopup(popupToOpen) {
     closeAllPopups();
     document.getElementsByClassName(popupToOpen)[0].classList.add("active");
-    // console.log("Opened popup with class: '" + popupToOpen + "'");
 }
 
 },{}],2:[function(require,module,exports){
@@ -58,14 +44,35 @@ window.onload = function () {
 
     console.log('Ready!');
 
-    (function () {
+    // handling buttons for popup
+    document.getElementsByClassName("popup__close-button")[0].addEventListener("click", function () {
+        // closing popup with close button
+        var cleanClass = (0, _popup.getPopupCleanClass)(this);
+        (0, _popup.closePopup)(cleanClass);
+    });
 
+    document.getElementsByClassName("popup")[0].addEventListener("click", function () {
+        // closing popup with click outside
+        var cleanClass = (0, _popup.getPopupCleanClass)(this);
+        (0, _popup.closePopup)(cleanClass);
+    });
+
+    document.getElementsByClassName("popup__main")[0].addEventListener("click", function (e) {
+        // preventing closing on clicking main form content
+        e.stopPropagation();
+    });
+
+    // album module declaration
+    var Album = function Album() {
         var REST_API_URL = "https://jsonplaceholder.typicode.com/";
+        var INITIAL_ALBUM_STATE = 1;
 
-        // initialization
-        initialiseAlbum();
+        function initialiseAlbum() {
+            // set initial album state
+            getImages(INITIAL_ALBUM_STATE);
+            getAlbumName(INITIAL_ALBUM_STATE);
+        }
 
-        // handling buttons
         document.getElementsByClassName("btnSidePrev")[0].addEventListener("click", function () {
             // previous button click 
             nextAlbum(-1);
@@ -75,32 +82,6 @@ window.onload = function () {
             // next button click
             nextAlbum(1);
         });
-
-        document.getElementsByClassName("popup__close-button")[0].addEventListener("click", function () {
-            // closing popup with close button
-            var cleanClass = (0, _popup.getPopupCleanClass)(this);
-            (0, _popup.closePopup)(cleanClass);
-            setTimeout(deleteBigImage, 500);
-        });
-
-        document.getElementsByClassName("popup")[0].addEventListener("click", function () {
-            // closing popup with click outside
-            var cleanClass = (0, _popup.getPopupCleanClass)(this);
-            (0, _popup.closePopup)(cleanClass);
-            setTimeout(deleteBigImage, 500);
-        });
-
-        document.getElementsByClassName("popup__main")[0].addEventListener("click", function (e) {
-            // preventing closing on clicking main form content
-            e.stopPropagation();
-        });
-
-        // interface realisation
-        function initialiseAlbum() {
-            // set initial album state
-            getImages(1);
-            getAlbumName(1);
-        }
 
         function getImages(albumNumber) {
             // getting album images by album number
@@ -202,11 +183,16 @@ window.onload = function () {
             // clear album items wrapper
             document.getElementsByClassName("albumItemsWrapper")[0].innerHTML = "";
         }
-        function deleteBigImage() {
-            // clear big image popup
-            document.getElementsByClassName("popup__content")[0].innerHTML = "";
-        }
-    })();
+
+        // API
+        return {
+            initAlbum: initialiseAlbum
+        };
+    };
+
+    // album module initialization
+    var album = new Album();
+    album.initAlbum();
 };
 
 },{"./modules/popup":1}]},{},[2]);
