@@ -6,11 +6,10 @@ window.onload = function(){
     // album module declaration
     var Album = function(){
         const REST_API_URL = "https://jsonplaceholder.typicode.com/";
-        const INITIAL_ALBUM_STATE = 1;
 
-        function initialiseAlbum(){ // set initial album state
-            getImages(INITIAL_ALBUM_STATE);
-            getAlbumName(INITIAL_ALBUM_STATE);
+        function initialiseAlbum(initialAlbumState = 1){ // set initial album state
+            getImages(initialAlbumState);
+            getAlbumName(initialAlbumState);
         }
 
         document.getElementsByClassName("btnSidePrev")[0].addEventListener("click", function(){ // previous button click 
